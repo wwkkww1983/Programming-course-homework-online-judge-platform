@@ -1,0 +1,77 @@
+[
+	{
+		"title": "知识点相关",
+		"icon": "&#xe705;",
+		"href": "",
+		"spread": false,
+		"children": [
+			{
+				"title": "课程学习",
+				"href": "/students/toLearnCourse",
+				"spread": false
+			}
+		]
+	},
+	{
+		"title": "课程作业相关",
+		"icon": "&#xe63c;",
+		"href": "",
+		"spread": false,
+		"children": [
+			{
+				"title": "作业未完成情况",
+				"href": "/students/toHomeworkNotDo",
+				"spread": false
+			},
+			{
+				"title": "作业完成情况",
+				"href": "/students/toHomeworkDone",
+				"spread": false
+			}
+		]
+	},
+	{
+		"title": "考试相关",
+		"icon": "&#xe629;",
+		"href": "",
+		"spread": false,
+		"children": [
+			{
+				"title": "考试未完成情况",
+				"href": "/students/toExamNotDo",
+				"spread": false
+			},
+			{
+				"title": "考试完成情况",
+				"href": "/students/toExamDone",
+				"spread": false
+			}
+		]
+	},
+	{
+		"title": "编程题相关",
+		"icon": "&#xe64b;",
+		"href": "",
+		"spread": false,
+		"children": [
+			{
+				"title": "编程题集",
+				"href": "/students/toDoCodeQuestion",
+				"spread": false
+			},
+			{
+				"title": "编程排行",
+				"href": "/students/toCodeQuestionRank",
+				"spread": false
+			}
+		]
+	},
+	{
+		"title": "讨论社区",
+		"icon": "&#xe63a;",
+		"href": "/toDiscuss",
+		"spread": false
+	}
+]
+
+

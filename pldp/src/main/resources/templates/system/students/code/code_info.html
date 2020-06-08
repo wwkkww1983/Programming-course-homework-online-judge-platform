@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编程题详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+
+</head>
+<body class="childrenBody">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-lg6 layui-col-md6">
+            <div class="layui-tab layui-col-lg12 layui-col-md12 layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">题目详情</li>
+                    <li>讨论</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show layui-input-inline">
+                        <div>
+                            <blockquote class="layui-elem-quote title" th:text="'题目：'+${codeQuestion.title}">
+                            </blockquote>
+                        </div>
+                        <div class="layui-col-lg12 layui-col-md12">
+                            <blockquote class="layui-elem-quote title" th:text="'内容：'+${codeQuestion.questionText}">
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item layui-input-inline" style="overflow-y: visible">
+                        <ul th:each="codediscuss,row:${codediscuss}">
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">
+                                        <div>
+                                            <div class="layui-inline" th:text="${codediscuss.studentName}"></div>
+                                        </div>
+                                        <p th:text="${codediscuss.createTime}"></p>
+                                    </h3>
+                                    <p>
+                                    <div th:text="${codediscuss.content}"></div>
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                        <form action="" method="post" class="layui-form layui-form-pane">
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <textarea id="L_content" name="discuss" required lay-verify="required" class="layui-textarea fly-editor" style="height: 150px;resize: none;overflow-y:visible;"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <input type="hidden" name="codeid" th:value="${codeQuestion.id}">
+                                <input type="hidden" name="studentId" th:value="${#httpServletRequest.getSession().getAttribute('user').studentId}">
+                                <button type="button" class="layui-btn" lay-submit="" lay-filter="submitDiscuss" id="submitDiscuss" ><span class="layui-icon layui-icon-add-1"></span>提交讨论</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-lg-offset6 layui-col-md-offset6">
+            <form action="" method="post" class="layui-form layui-form-pane" >
+                <div class="layui-tab layui-col-lg12 layui-col-md12 layui-tab-card">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">代码栏</li>
+                        </ul>
+                    <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show layui-input-inline layui-form-item layui-form-text">
+                                <div class="layui-col-lg12 layui-col-md12">
+                                    <div class="layui-input-block layui-col-lg3 layui-col-md3">
+                                        <select name="language" lay-verify="required">
+                                            <option value="1">C</option>
+                                            <option value="2">Java</option>
+                                            <option value="3">Python</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <textarea onkeydown="tabspace(this)"  class="layui-textarea" name="content" autocomplete="off" style="height: 300px;resize: none;overflow-y:visible;"></textarea>
+                            </div>
+                    </div>
+                </div>
+                <div class=" layui-form-item layui-col-lg12 layui-col-md12">
+                    <input type="hidden" name="codeQuestionId" th:value="${codeQuestion.id}">
+                    <input type="hidden" name="studentId" th:value="${#httpServletRequest.getSession().getAttribute('user').studentId}">
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="doTest" id="doTest" >提交</button>
+                </div>
+                <div class="layui-form-item layui-col-lg12 layui-col-md12">
+                    <textarea class="layui-textarea" id="state" name="state" autocomplete="off" style="height: 100px;resize: none;overflow-y:visible;" placeholder="调试信息"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['jquery','form','layer','element'],function(){
+        var $=layui.jquery;
+        var form=layui.form;
+        var layer=layui.layer;
+        var element=layui.element;
+
+        form.on("submit(doTest)",function(data){
+            $.ajax({
+                url:"/students/doCodeTest",
+                data:data.field,
+                success:function (obj) {
+                    $("#state").empty();
+                    $("#state").text(obj.msg);
+                }
+
+            });
+            return false;
+        });
+
+        form.on("submit(submitDiscuss)",function(data){
+            $.post("/students/addCodeDiscuss",data.field,function(res){
+                if(res.code==200){
+                    layer.msg(res.msg,{
+                        time:1000,
+                        end:function(){
+                            window.location.reload();
+                        }
+                    });
+                }
+                else{
+                    layer.msg(res.msg);
+                }
+            });
+            return false;
+        });
+
+
+
+        /*
+        form.on("submit(doSubmit)",function(data){
+            $.post("/students/addCodeResult",data.field,function(res){
+                alert("已提交");
+            });
+            return false;
+        });*/
+
+    });
+
+
+    function tabspace(obj){
+        if (event.keyCode == 9)
+        {
+            obj.value = obj.value + "  "; // 跳几格由你自已决定
+            event.returnValue = false;
+        }
+    }
+
+</script>
+</html>

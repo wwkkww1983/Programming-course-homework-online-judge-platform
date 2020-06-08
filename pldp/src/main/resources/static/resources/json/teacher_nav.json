@@ -1,0 +1,51 @@
+[
+	{
+		"title": "课程作业相关",
+		"icon": "&#xe705;",
+		"href": "",
+		"spread": false,
+		"children": [
+			{
+				"title": "课程作业发布情况",
+				"href": "/teachers/toHomeworkPushInfo",
+				"spread": false
+			},
+			{
+				"title": "学生作业完成情况",
+				"href": "/teachers/toHomeworkCompleteInfo",
+				"spread": false
+			}
+		]
+	},
+	{
+		"title": "考试相关",
+		"icon": "&#xe6b2;",
+		"href": "",
+		"spread": false,
+		"children": [
+			{
+				"title": "考试发布情况",
+				"href": "/teachers/toExamPushInfo",
+				"spread": false
+			},
+			{
+				"title": "考试学生完成情况",
+				"href": "/teachers/toExamCompleteInfo",
+				"spread": false
+			}
+		]
+	},
+	{
+		"title": "班级管理",
+		"icon": "&#xe770;",
+		"href": "/teachers/toClassManager",
+		"spread": false
+	},
+	{
+		"title": "讨论社区",
+		"icon": "&#xe63a;",
+		"href": "/toDiscuss",
+		"spread": false
+	}
+
+]

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>答案详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+
+</head>
+<body class="childrenBody">
+<div class="layui-row layui-col-space10">
+    <div>
+
+            <div class="layui-col-lg12 layui-col-md12" >
+                <blockquote class="layui-elem-quote title" >
+                    单选题
+                </blockquote>
+                <div th:each="singleAnswerVo,row:${singleAnswerVo}">
+                    <div>
+                        <p>
+                        <div th:text="${row.index+1}+'.'+${singleAnswerVo.singleSelectQuestion.questionText}+' 答案：'+${singleAnswerVo.singleSelectQuestion.answer}"></div>
+                        </p>
+                        <div th:text="'A.'+${singleAnswerVo.singleSelectQuestion.optionA}" ></div>
+                        <div th:text="'B.'+${singleAnswerVo.singleSelectQuestion.optionB}" ></div>
+                        <div th:text="'C.'+${singleAnswerVo.singleSelectQuestion.optionC}" ></div>
+                        <div th:text="'D.'+${singleAnswerVo.singleSelectQuestion.optionD}" ></div>
+                    </div>
+                    <div th:if="${singleAnswerVo.examAnswerinfo}!=null">
+                        <p>
+                            <div th:text="'Ta的答案是:'+${singleAnswerVo.examAnswerinfo.answer}+',得分是:'+${singleAnswerVo.examAnswerinfo.score}">
+                            </div>
+                        </p>
+                    </div>
+                    <div th:if="${singleAnswerVo.examAnswerinfo}==null">
+                        <p>
+                        Ta尚未回答该问题
+                        </p>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+
+
+        <div class="layui-col-lg12 layui-col-md12" >
+            <blockquote class="layui-elem-quote title" >
+                填空题
+            </blockquote>
+            <div th:each="blankAnswerVo,row:${blankAnswerVo}">
+                <div>
+                    <p>
+                    <div th:text="${row.index+1}+'.'+${blankAnswerVo.fillBlankQuestion.questionText}+' 答案：'+${blankAnswerVo.fillBlankQuestion.answer}"></div>
+                    </p>
+                </div>
+                <div th:if="${blankAnswerVo.examAnswerinfo}!=null">
+                    <p>
+                    <div th:text="'Ta的答案是:'+${blankAnswerVo.examAnswerinfo.answer}+',得分是:'+${blankAnswerVo.examAnswerinfo.score}">
+                    </div>
+                    </p>
+                </div>
+                <div th:if="${blankAnswerVo.examAnswerinfo}==null">
+                    <p>
+                        Ta尚未回答该问题
+                    </p>
+                </div>
+            </div>
+                <hr>
+            </div>
+        </div>
+
+
+        <div class="layui-col-lg12 layui-col-md12">
+            <blockquote class="layui-elem-quote title" >
+                代码题
+            </blockquote>
+            <div th:each="exerciseAnswerVo,row:${exerciseAnswerVo}">
+                <div>
+                    <p>
+                    <div th:text="${row.index+1}+'.标题:'+${exerciseAnswerVo.exerciseQuestion.title}"></div>
+                    <div th:text="'题干:'+${exerciseAnswerVo.exerciseQuestion.exerciseText}"></div>
+                    </p>
+                </div>
+                <div th:if="${exerciseAnswerVo.examAnswerinfo}!=null">
+                    <p>
+                    <div>Ta的答案是:</div>
+                    <textarea  class="layui-textarea disabled" th:text="${exerciseAnswerVo.examAnswerinfo.answer}"  style="height: 300px;resize: none;overflow-y:visible;" readonly></textarea>
+                    </p>
+                </div>
+                <div th:if="${exerciseAnswerVo.examAnswerinfo}!=null">
+                    <p>
+                    <div th:text="'Ta的得分是:'+${exerciseAnswerVo.examAnswerinfo.score}">
+                    </div>
+                    </p>
+                </div>
+                <div th:if="${exerciseAnswerVo.examAnswerinfo}==null">
+                    <p>
+                        Ta尚未回答该问题
+                    </p>
+                </div>
+                <hr>
+            </div>
+        </div>
+
+        <div class="layui-col-lg12 layui-col-md12">
+
+    </div>
+
+
+</div>
+</body>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['jquery','form','layer','element','util'],function(){
+        var $=layui.jquery;
+        var form=layui.form;
+        var layer=layui.layer;
+        var element=layui.element;
+        var util=layui.util;
+
+
+    });
+
+</script>
+
+</html>

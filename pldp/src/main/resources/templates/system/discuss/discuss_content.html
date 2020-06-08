@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>帖子详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+</head>
+<body class="childrenBody">
+
+
+<div class="layui-card" th:data-id="${question.id}">
+    <div class="layui-card-header">
+        <div class="layui-inline">标题:</div>
+        <div class="layui-inline">[[${question.title}]]</div>
+    </div>
+    <div class="layui-card-body">
+        <div>
+            <div class="layui-inline">内容:</div>
+            <div class="layui-inline">[[${question.content}]]</div>
+        </div>
+        <div>
+            <div class="layui-inline">[[${question.userName}]]</div>
+            <div class="layui-inline" th:if="${question.userType eq 1}">
+                <div>同学</div>
+            </div>
+            <div class="layui-inline" th:if="${question.userType eq 2}">
+                <div>老师</div>
+            </div>
+        </div>
+        <div>
+            <div class="layui-inline">发布时间</div>
+            <div class="layui-inline">[[${question.createTime}]]</div>
+        </div>
+    </div>
+</div>
+ <hr class="layui-bg-green">
+评论
+
+
+<div>
+<ul th:each="comment,row:${comment}">
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title">
+                <div>
+                    <div class="layui-inline" th:text="${comment.userName}"></div>
+                    <div class="layui-inline" th:if="${comment.userType eq 1}">
+                        <div>同学</div>
+                    </div>
+                    <div class="layui-inline" th:if="${comment.userType eq 2}">
+                        <div>老师</div>
+                    </div>
+                </div>
+                <p th:text="${comment.createTime}"></p>
+            </h3>
+            <p>
+                <div th:text="${comment.content}"></div>
+            </p>
+
+        </div>
+    </li>
+</ul>
+<div id="page"></div>
+</div>
+
+<div class="layui-form layui-form-pane">
+    <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm">
+        <div class="layui-form-item layui-form-text">
+            <div class="layui-input-block">
+                <textarea id="L_content" name="content" required lay-verify="required" placeholder="我要回答"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input type="hidden" name="questionid" th:value="${question.id}">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="doSubmit" id="doSubmit" ><span class="layui-icon layui-icon-add-1"></span>提交回答</button>
+        </div>
+    </form>
+</div>
+
+
+</body>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script>
+    layui.use(['jquery','form','table','layer','laypage'],function() {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var laypage = layui.laypage;
+
+
+        laypage.render({
+            elem: 'page' //注意，这里的 test1 是 ID，不用加 # 号
+            ,count: '[[${count}]]' //数据总数，从服务端得到
+        });
+
+        form.on("submit(doSubmit)",function(data){
+            $.post("/addDiscussComment",data.field,function(res){
+                if(res.code==200){
+                    layer.msg(res.msg,{
+                        time:1000,
+                        end:function(){
+                            window.location.reload();
+                        }
+                    });
+                }
+                else{
+                    layer.msg(res.msg);
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+
+</html>
+

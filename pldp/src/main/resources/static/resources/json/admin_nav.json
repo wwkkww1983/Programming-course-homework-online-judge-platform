@@ -1,0 +1,133 @@
+[
+		{
+			"title": "用户信息管理",
+			"icon": "&#xe770;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "学生信息管理",
+					"href": "/admins/toStudentInfoManager",
+					"spread": false
+				},
+				{
+					"title": "教师信息管理",
+					"href": "/admins/toTeacherInfoManager",
+					"spread": false
+				},
+				{
+					"title": "管理员信息管理",
+					"href": "/admins/toAdminInfoManager",
+					"spread": false
+				},
+				{
+					"title": "班级信息管理",
+					"href": "/admins/toClassInfoManager",
+					"spread": false
+				}
+			]
+		},
+		{
+			"title": "课程管理",
+			"icon": "&#xe705;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "课程信息管理",
+					"href": "/admins/toCourseInfoManager",
+					"spread": false
+				},
+				{
+					"title": "课程内容管理",
+					"href": "/admins/toCourseContentManager",
+					"spread": false
+				},
+				{
+					"title": "选择题题库管理",
+					"href": "/admins/toSingleSelectManager",
+					"spread": false
+				},
+				{
+					"title": "填空题题库管理",
+					"href": "/admins/toFillBlankManager",
+					"spread": false
+				},
+				{
+					"title": "编程题题库管理",
+					"href": "/admins/toCodeManager",
+					"spread": false
+				},
+				{
+					"title": "编程题讨论管理",
+					"href": "/admins/toCodeDiscussManager",
+					"spread": false
+				},
+				{
+					"title": "编程题测试用例管理",
+					"href": "/admins/toCodeTestManager",
+					"spread": false
+				},
+				{
+					"title": "练习题题库管理",
+					"href": "/admins/toExerciseManager",
+					"spread": false
+				},
+				{
+					"title": "练习题测试用例管理",
+					"href": "/admins/toExerciseTestManager",
+					"spread": false
+				}
+			]
+		},
+		{
+			"title": "试题管理",
+			"icon": "&#xe6b2;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "试卷信息管理",
+					"href": "/admins/toPaperInfoManager",
+					"spread": false
+				},
+				{
+					"title": "考生考试答案管理",
+					"href": "/admins/toAnswerInfoManager",
+					"spread": false
+				},
+				{
+					"title": "考生成绩管理",
+					"href": "/admins/toScoreInfoManager",
+					"spread": false
+				}
+			]
+		},
+		{
+			"title": "讨论社区信息管理",
+			"icon": "&#xe63a;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "讨论帖管理",
+					"href": "/admins/toQuestionInfoManager",
+					"spread": false
+				},
+				{
+					"title": "评论信息管理",
+					"href": "/admins/toCommentInfoManager",
+					"spread": false
+				}
+			]
+		},
+		{
+			"title": "公告管理",
+			"icon": "&#xe626;",
+			"href": "/admins/toNoticeInfoManager",
+			"spread": false
+		}
+
+]
+
+

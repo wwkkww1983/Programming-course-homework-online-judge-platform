@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>填空题</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+
+</head>
+<body class="childrenBody">
+<div class="layui-row layui-col-space10">
+    <div class="layui-col-lg12 layui-col-md12">
+        <div class="layui-col-lg-offset4 layui-col-md-offset4" th:text="'考试名称:'+${session.paper.paperName}"></div>
+    </div>
+    <div class="layui-col-lg12 layui-col-md12">
+        <div class="layui-col-lg-offset4 layui-col-md-offset4">
+            <span th:text="'开始时间:'+${session.paper.startTime}"></span>
+            &nbsp;&nbsp;
+            <span th:text="'结束时间:'+${session.paper.endTime}"></span>
+        </div>
+
+    </div>
+
+    <div class="layui-col-lg12 layui-col-md12">
+        <div class="layui-col-lg-offset4 layui-col-md-offset4" id="test"></div>
+    </div>
+
+    <div class="layui-col-lg12 layui-col-md12">
+        <span class="layui-col-lg-offset4 layui-col-md-offset4">
+            <span th:text="'填空题数:'+${session.paper.blankCount}"></span>
+            &nbsp;
+            <span th:text="'每题分值:'+${session.paper.blankScore}+'分'"></span>
+        </span>
+    </div>
+    <div class="layui-form layui-form-pane">
+        <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm">
+            <div class="layui-col-lg12 layui-col-md12" th:each="blankquestion,row:${session.blankQuestion}">
+                <div class="layui-form-item">
+                    <p>
+                    <div th:text="${row.index+1}+'.'+${blankquestion.questionText}"></div>
+                    </p>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">回答</label>
+                            <div class="layui-input-inline">
+                            <input type="text" th:name="${blankquestion.id}"  autocomplete="off" placeholder="请输入答案" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <!--
+                <input type="hidden" name="studentId" th:value="${session.user.studentId}">
+                <input type="hidden" name="paperId" th:value="${session.paper.id}">
+                -->
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="doSubmit" id="doSubmit" ><span class="layui-icon layui-icon-add-1"></span>提交</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+</body>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['jquery','form','layer','element','util'],function(){
+        var $=layui.jquery;
+        var form=layui.form;
+        var layer=layui.layer;
+        var element=layui.element;
+        var util=layui.util;
+
+        var endTime = '[[${session.endTime}]]' //假设为结束日期
+            ,serverTime = '[[${session.serverTime}]]'; //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
+
+        util.countdown(endTime, serverTime, function(date, serverTime, timer){
+            var str = date[0] + '天' + date[1] + '时' +  date[2] + '分' + date[3] + '秒';
+            layui.$('#test').html('距离考试结束还有：'+ str);
+        });
+
+        form.on("submit(doSubmit)",function(data){
+            var arr = $("#dataFrm").serializeArray();//form表单序列化
+            var jsonStr = "";
+            jsonStr += '{';
+            for (var i = 0; i < arr.length; i++) {
+                //name为题目的id,value为学生的回答
+                jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",';
+            }
+            jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
+            jsonStr += '}';
+            var jsons = JSON.parse(jsonStr); //将拿到的键值对转换位json对象
+
+            var result = {data:JSON.stringify(jsons)};
+            layer.confirm('你确定要提交结果吗?提交成功后不可再次进入该类题型', {icon: 3, title:'提示'}, function(index){
+                $.post("/students/submitBlankQuestionExam",result,function(res){
+                    if(res.code==200){
+                        layer.msg(res.msg,{
+                            time:1000,
+                            end:function(){
+                                $("#doBlank", window.parent.document).attr("disabled", "disabled");
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+
+                            }
+                        });
+                    }
+                    else{
+                        layer.msg(res.msg);
+                    }
+                });
+                layer.close(index);
+            });
+
+            return false;
+
+        });
+
+    });
+
+</script>
+
+</html>

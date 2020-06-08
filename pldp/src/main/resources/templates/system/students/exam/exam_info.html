@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>考试内容</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+
+</head>
+<body class="childrenBody">
+<div class="layui-row layui-col-space10">
+    <div class="layui-col-lg12 layui-col-md12">
+        <div class="layui-col-lg-offset4 layui-col-md-offset4" th:text="'考试名称:'+${session.paper.paperName}"></div>
+    </div>
+    <div class="layui-col-lg12 layui-col-md12">
+        <div class="layui-col-lg-offset4 layui-col-md-offset4">
+            <span th:text="'开始时间:'+${session.paper.startTime}"></span>
+            &nbsp;&nbsp;
+            <span th:text="'结束时间:'+${session.paper.endTime}"></span>
+        </div>
+
+    </div>
+    <div class="layui-col-lg12 layui-col-md12">
+        <div class="layui-col-lg-offset4 layui-col-md-offset4" id="test"></div>
+    </div>
+    <div class="layui-col-lg12 layui-col-md12">
+        <span class="layui-col-lg4 layui-col-md4">
+            <span th:text="'单选题数:'+${session.paper.singleCount}"></span>
+            &nbsp;
+            <span th:text="'每题分值:'+${session.paper.singleScore}+'分'"></span>
+        </span>
+        <span class="layui-col-lg4 layui-col-md4">
+            <span th:text="'填空题数:'+${session.paper.blankCount}"></span>
+            &nbsp;
+            <span th:text="'每题分值:'+${session.paper.blankScore}+'分'"></span>
+        </span>
+        <span class="layui-col-lg4 layui-col-md4">
+            <span th:text="'代码题数:'+${session.paper.codeCount}"></span>
+            &nbsp;
+            <span th:text="'每题分值:'+${session.paper.codeScore}+'分'"></span>
+        </span>
+    </div>
+    <div class="layui-col-lg12 layui-col-md12">
+        <span class="layui-col-lg4 layui-col-md4">
+            <button type="button"  class="layui-btn" lay-submit="" lay-filter="doSingle" id="doSingle" >单选题</button>
+        </span>
+        <span class="layui-col-lg4 layui-col-md4">
+            <button type="button"  class="layui-btn" lay-submit="" lay-filter="doBlank" id="doBlank" >填空题</button>
+        </span>
+        <span class="layui-col-lg4 layui-col-md4">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="doCode" id="doCode" >代码题</button>
+        </span>
+    </div>
+
+    <div class="layui-col-lg12 layui-col-md12">
+        <span class="layui-col-lg-offset5 layui-col-md-offset5">
+        <button type="button"  class="layui-btn" lay-submit="" lay-filter="submitExam" id="submitExam" >提交试卷</button>
+        </span>
+    </div>
+
+
+</div>
+</body>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['jquery','form','layer','element','util'],function(){
+        var $=layui.jquery;
+        var form=layui.form;
+        var layer=layui.layer;
+        var element=layui.element;
+        var util=layui.util;
+
+        var endTime = '[[${session.endTime}]]' //假设为结束日期
+            ,serverTime = '[[${session.serverTime}]]'; //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
+
+        util.countdown(endTime, serverTime, function(date, serverTime, timer){
+            var str = date[0] + '天' + date[1] + '时' +  date[2] + '分' + date[3] + '秒';
+            layui.$('#test').html('距离考试结束还有：'+ str);
+            if(timer>5&&date[0]=='0'&&date[1]=='0'&&date[2]=='0'&&date[3]=='0'){
+                layer.msg("考试时间结束,未提交的题目将不会计入分数", {
+                    time: 1000,
+                    end: function () {
+                        layer.closeAll();
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.location.reload();
+                        parent.layer.close(index); //再执行关闭
+                    }
+                });
+            }
+        });
+
+        //做单选题
+        $("#doSingle").click(function openCodeQuestion(){
+                layer.open({
+                    type:2,
+                    content:"/students/doSingleQuestionExam?id="+'[[${session.paper.id}]]',
+                    area:['1000px','600px'],
+                    title:'选择题详情'
+                });
+        });
+
+        //做填空题
+        $("#doBlank").click(function(){
+            layer.open({
+                type:2,
+                content:"/students/doBlankQuestionExam?id="+'[[${session.paper.id}]]',
+                area:['1000px','600px'],
+                title:'填空题详情'
+            });
+        });
+
+        //做代码题
+        $("#doCode").click(function(){
+            layer.open({
+                type:2,
+                content:"/students/doCodeQuestionExam?id="+'[[${session.paper.id}]]',
+                area:['1000px','600px'],
+                title:'代码题详情'
+            });
+        });
+
+        //提交试卷
+        $("#submitExam").click(function(result){
+            layer.confirm('你确定要提交试卷吗?提交成功后不可再次进入考试', {icon: 3, title:'提示'}, function(){
+                $.post("/students/submitExam", result.field, function(res){
+                    if(res.code==200){
+                        layer.msg(res.msg,{
+                            time:500,
+                            end:function(){
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.location.reload();
+                                parent.layer.close(index); //再执行关闭
+
+                            }
+                        });
+                    }
+                    else{
+                        layer.msg(res.msg);
+                    }
+                });
+            });
+            /*
+            $.post("/students/submitHomework?id="+'[[${session.paper.id}]]',result.field,function(res) {
+                if (res.code == 200) {
+                    layer.msg(res.msg, {
+                        time: 1000,
+                        end: function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+
+                        }
+                    });
+                }
+                else {
+                    layer.msg(res.msg);
+                }
+            });
+            */
+        });
+
+
+
+    });
+
+</script>
+
+</html>
